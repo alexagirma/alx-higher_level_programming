@@ -1,15 +1,19 @@
-
 #!/usr/bin/python3
-"""Uses the GitHub API to display a GitHub ID based on given credentials.
-Usage: ./10-my_github.py <GitHub username> <GitHub password>
-  - Uses Basic Authentication to access the ID.
-"""
-import sys
+""" Fetches https://intranet.hbtn.io/status"""
 import requests
 from requests.auth import HTTPBasicAuth
+from sys import argv
 
 
-if __name__ == "__main__":
-    auth = HTTPBasicAuth(sys.argv[1], sys.argv[2])
-    r = requests.get("https://api.github.com/user", auth=auth)
-    print(r.json().get("id"))
+if __name__ == '__main__':
+    url = 'https://api.github.com/user'
+    username, token = argv[1:]
+
+    s = requests.Session()
+
+    data = {'username': username, 'token': token}
+    response = s.get(url, auth=(username, token)).json()
+    try:
+        print(response['id'])
+    except:
+        print('None')
