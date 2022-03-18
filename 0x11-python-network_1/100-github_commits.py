@@ -1,18 +1,18 @@
 #!/usr/bin/python3
-""" Fetches https://intranet.hbtn.io/status"""
-import requests
-from requests.auth import HTTPBasicAuth
+"""List 10 commits (from the most recent to oldest)
+of a repository by user.
+This script use the Github API and print all commits
+by: `<sha>: <author name>` (one by line).
+"""
+
 from sys import argv
+import requests
 
 
-if __name__ == '__main__':
-    repo, user = argv[1:]
-    url = 'https://api.github.com/repos/{}/{}/commits'.format(user, repo)
+if __name__ == "__main__":
+    url = 'https://api.github.com'
+    uri = '{0}/repos/{1}/{2}/commits'.format(url, argv[2], argv[1])
+    req = requests.get(uri).json()
 
-    s = requests.Session()
-
-    response = s.get(url)
-    commits = response.json()[:10]
-    for commit in commits:
-        print(commit.get('sha'), end=': ')
-        print(commit.get('commit').get('author').get('name'))
+    for com in req[0:10]:
+        print(com['sha'] + ':', com['commit']['author']['name'])
